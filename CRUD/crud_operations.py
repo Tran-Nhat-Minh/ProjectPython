@@ -1,6 +1,6 @@
 import pandas as pd
 
-def read_students(file_path="c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\students.csv"):  # Updated path
+def read_students(file_path="c:\\Users\\LEGION\\PycharmProjects\\tuan10\\Churn_Modelling.csv"):  # Default to Churn_Modelling.csv
     try:
         df = pd.read_csv(file_path)
         return df

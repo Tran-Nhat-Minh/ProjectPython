@@ -86,7 +86,7 @@ class TrangChu:
     def show_statistics(self):
         if messagebox.askyesno("Xác nhận", "Chuyển đến trang thống kê dữ liệu?"):
             self.root.destroy()
-            from thong_ke import ThongKe
+            from thong_ke import ThongKe  # Import from the correct location
             root = tk.Tk()
             app = ThongKe(root)
             root.mainloop()
