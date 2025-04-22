@@ -35,12 +35,6 @@ class DangKy:
         self.create_register_form()
 
     def create_register_form(self):
-        # Full Name field
-        tk.Label(self.form_frame, text="Họ và Tên", font=("Segoe UI", 12), bg="white", fg="#333333").pack(pady=(20, 5))
-        self.fullname_entry = tk.Entry(self.form_frame, font=("Segoe UI", 12), bg="#f5f5f5", fg="#333333", bd=0)
-        self.fullname_entry.pack(pady=(0, 10), padx=20, fill=tk.X)
-        tk.Frame(self.form_frame, bg="#6200EE", height=2).pack(padx=20, fill=tk.X)
-
         # Username field
         tk.Label(self.form_frame, text="Tên đăng nhập", font=("Segoe UI", 12), bg="white", fg="#333333").pack(pady=(10, 5))
         self.username_entry = tk.Entry(self.form_frame, font=("Segoe UI", 12), bg="#f5f5f5", fg="#333333", bd=0)
@@ -76,13 +70,12 @@ class DangKy:
         widget.bind("<Leave>", lambda e: widget.config(bg="#6200EE"))
 
     def register(self):
-        fullname = self.fullname_entry.get()
         username = self.username_entry.get()
         password = self.password_entry.get()
         confirm_password = self.confirm_password_entry.get()
 
         # Check if all fields are filled
-        if not fullname or not username or not password or not confirm_password:
+        if not username or not password or not confirm_password:
             messagebox.showwarning("Cảnh báo", "Vui lòng điền đầy đủ thông tin!")
             return
 

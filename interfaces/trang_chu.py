@@ -41,7 +41,7 @@ class TrangChu:
     def create_menu(self):
         menu_items = [
             ("Quản lý", self.show_management),
-            ("Trực quan", self.show_visualization),
+            # ("Trực quan", self.show_visualization),
             ("Thống kê", self.show_statistics),
             ("Đăng xuất", self.logout),
             ("Thoát", self.exit_app)
@@ -75,13 +75,13 @@ class TrangChu:
             app = QuanLy(root)
             root.mainloop()
 
-    def show_visualization(self):
-        if messagebox.askyesno("Xác nhận", "Chuyển đến trang trực quan hóa dữ liệu?"):
-            self.root.destroy()
-            from truc_quan import TrucQuan
-            root = tk.Tk()
-            app = TrucQuan(root)
-            root.mainloop()
+    # def show_visualization(self):
+    #     if messagebox.askyesno("Xác nhận", "Chuyển đến trang trực quan hóa dữ liệu?"):
+    #         self.root.destroy()
+    #         from truc_quan import TrucQuan
+    #         root = tk.Tk()
+    #         app = TrucQuan(root)
+    #         root.mainloop()
 
     def show_statistics(self):
         if messagebox.askyesno("Xác nhận", "Chuyển đến trang thống kê dữ liệu?"):
