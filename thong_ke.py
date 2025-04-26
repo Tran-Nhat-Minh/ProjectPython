@@ -14,7 +14,7 @@ class ThongKe:
         self.fade_in()
         
         # Load data
-        self.data_path = "c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\students.csv"
+        self.data_path = "D:\\HK2_2025\\Python\\ProjectPython-main\\students.csv"
         try:
             self.df = pd.read_csv(self.data_path)
         except FileNotFoundError:
@@ -53,6 +53,9 @@ class ThongKe:
         
     def create_menu(self):
         menu_items = [
+            ("Biểu đồ cột số lượng sinh viên theo khoa", self.show_department_student_count),
+            ("Biểu đồ đường GPA trung bình qua các năm", self.show_line_chart_gpa_by_year),
+            ("Biểu đồ tán xạ Tuổi vs GPA", self.show_scatter_age_vs_gpa),
             ("Biểu đồ Boxplot GPA theo khoa", self.show_boxplot),
             ("Biểu đồ tròn tỷ lệ sinh viên theo khoa", self.show_pie_chart),
             ("Biểu đồ cột GPA theo khoa và năm", self.show_grouped_bar),
@@ -89,7 +92,88 @@ class ThongKe:
     def clear_content(self):
         for widget in self.content_frame.winfo_children():
             widget.destroy()
-            
+
+    def show_department_student_count(self):
+        self.clear_content()
+    
+        # Create figure
+        fig, ax = plt.subplots(figsize=(10, 6))
+    
+        # Count students by department
+        dept_counts = self.df['Department'].value_counts()
+    
+        # Create bar chart
+        bars = ax.bar(dept_counts.index, dept_counts.values, color='#80b1d3', alpha=0.8)
+    
+        # Add data labels on top of each bar
+        for bar in bars:
+            height = bar.get_height()
+            ax.annotate(f'{int(height)}',
+                    xy=(bar.get_x() + bar.get_width() / 2, height),
+                    xytext=(0, 5),  # Offset label upward
+                    textcoords="offset points",
+                    ha='center', va='bottom', fontsize=9, fontweight='bold')
+    
+        # Set labels and title
+        ax.set_title('Số lượng sinh viên theo từng khoa', fontsize=14, fontweight='bold')
+        ax.set_xlabel('Khoa', fontsize=12)
+        ax.set_ylabel('Số lượng sinh viên', fontsize=12)
+        ax.set_xticklabels(dept_counts.index, rotation=45, ha='right')
+        ax.grid(True, linestyle='--', alpha=0.3, axis='y')
+    
+        # Create canvas
+        canvas = FigureCanvasTkAgg(fig, master=self.content_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+
+    def show_line_chart_gpa_by_year(self):
+        self.clear_content()
+    
+        # Create figure
+        fig, ax = plt.subplots(figsize=(10, 6))
+    
+        # Group by GraduationYear, calculate mean GPA
+        gpa_by_year = self.df.groupby('GraduationYear')['GPA'].mean().sort_index()
+    
+        # Plot line chart
+        ax.plot(gpa_by_year.index, gpa_by_year.values, marker='o', linestyle='-', color='#fb8072', linewidth=2)
+    
+        # Add data labels
+        for x, y in zip(gpa_by_year.index, gpa_by_year.values):
+            ax.text(x, y + 0.02, f'{y:.2f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
+    
+        # Set labels and title
+        ax.set_title('Xu hướng GPA trung bình theo năm tốt nghiệp', fontsize=14, fontweight='bold')
+        ax.set_xlabel('Năm tốt nghiệp', fontsize=12)
+        ax.set_ylabel('GPA trung bình', fontsize=12)
+        ax.grid(True, linestyle='--', alpha=0.5)
+    
+        # Create canvas
+        canvas = FigureCanvasTkAgg(fig, master=self.content_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+
+    def show_scatter_age_vs_gpa(self):
+        self.clear_content()
+    
+        # Create figure
+        fig, ax = plt.subplots(figsize=(10, 6))
+    
+        # Plot scatter
+        ax.scatter(self.df['Age'], self.df['GPA'], color='#80b1d3', alpha=0.7, edgecolors='w', s=70)
+    
+        # Set labels and title
+        ax.set_title('Mối quan hệ giữa Tuổi và GPA', fontsize=14, fontweight='bold')
+        ax.set_xlabel('Tuổi', fontsize=12)
+        ax.set_ylabel('GPA', fontsize=12)
+        ax.grid(True, linestyle='--', alpha=0.5)
+    
+        # Create canvas
+        canvas = FigureCanvasTkAgg(fig, master=self.content_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+
+
     def show_boxplot(self):
         self.clear_content()
         
