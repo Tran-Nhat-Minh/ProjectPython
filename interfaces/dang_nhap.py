@@ -41,7 +41,7 @@ class DangNhap:
         
         # Thêm ảnh vào phần body
         try:
-            img_path = "c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\img1.png"
+            img_path = "c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\img2.png"
             if os.path.exists(img_path):
                 # Sử dụng PIL để xử lý ảnh
                 img = Image.open(img_path)

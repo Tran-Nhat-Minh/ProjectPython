@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from PIL import Image, ImageTk
 
 class DangKy:
     def __init__(self, root):
@@ -31,6 +32,28 @@ class DangKy:
 
         self.form_frame = tk.Frame(self.main_container, bg="white", width=400, relief="raised", bd=2)
         self.form_frame.pack(side=tk.LEFT, fill=tk.Y, padx=20, pady=20)
+
+        # Thêm khung hình ảnh bên phải
+        self.image_frame = tk.Frame(self.main_container, bg="#f5f5f5")
+        self.image_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=20, pady=20)
+        
+        # Tải và hiển thị hình ảnh
+        try:
+            img_path = "c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\img1.png"
+            img = Image.open(img_path)
+            # Điều chỉnh kích thước hình ảnh để phù hợp với khung
+            img = img.resize((750, 450), Image.LANCZOS)
+            self.photo = ImageTk.PhotoImage(img)
+            
+            # Tạo label để hiển thị hình ảnh
+            img_label = tk.Label(self.image_frame, image=self.photo, bg="#f5f5f5")
+            img_label.pack(pady=20)
+
+        except Exception as e:
+            print(f"Lỗi khi tải hình ảnh: {e}")
+            # Hiển thị thông báo nếu không tải được hình ảnh
+            tk.Label(self.image_frame, text="Không thể tải hình ảnh", 
+                    font=("Segoe UI", 14), bg="#f5f5f5", fg="red").pack(pady=50)
 
         self.create_register_form()
 
