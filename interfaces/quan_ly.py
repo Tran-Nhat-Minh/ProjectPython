@@ -3,7 +3,7 @@ from tkinter import messagebox
 import pandas as pd
 
 # Update the path to the new CSV file
-dataset_path = "c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\students.csv"
+dataset_path = ".\\students.csv"
 
 class QuanLy:
     def __init__(self, root):

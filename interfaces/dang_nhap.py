@@ -69,7 +69,7 @@ class DangNhap:
     
         # Read credentials from the file
         try:
-            with open("c:\\Users\\LEGION\\PycharmProjects\\tuan10\\credentials.txt", "r") as file:
+            with open(".\\credentials.txt", "r") as file:
                 credentials = file.readlines()
         except FileNotFoundError:
             messagebox.showerror("Lỗi", "Không tìm thấy tệp thông tin đăng nhập!")
@@ -83,7 +83,7 @@ class DangNhap:
                 self.root.destroy()
                 self.open_main_page()
                 return
-    
+        print(credentials)
         messagebox.showerror("Lỗi", "Tên đăng nhập hoặc mật khẩu không đúng!")
 
     def go_to_register(self, event):

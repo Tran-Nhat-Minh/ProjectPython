@@ -85,7 +85,7 @@ class DangKy:
             return
 
         # Save credentials to a file
-        with open("c:\\Users\\LEGION\\PycharmProjects\\tuan10\\credentials.txt", "a") as file:
+        with open(".\\credentials.txt", "a") as file:
             file.write(f"{username},{password}\n")
 
         # Register logic (giả sử đăng ký thành công)
