@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
 import pandas as pd
+import os
+from PIL import Image, ImageTk
 
 # Update the path to the new CSV file
 dataset_path = "c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\students.csv"
@@ -11,6 +13,15 @@ class QuanLy:
         self.root.title("Hệ thống quản lý sinh viên")
         self.root.geometry("1000x600")
         self.root.configure(bg="#f5f5f5")
+        
+        # Material Design Colors
+        self.primary_color = "#6200EE"
+        self.primary_dark = "#3700B3"
+        self.secondary_color = "#03DAC6"
+        self.background_color = "#f5f5f5"
+        self.card_color = "#ffffff"
+        self.text_primary = "#333333"
+        self.text_secondary = "#757575"
 
         self.fade_in()
         self.create_layout()
@@ -27,36 +38,103 @@ class QuanLy:
             self.root.after(20)
 
     def create_layout(self):
-        self.header_frame = tk.Frame(self.root, bg="white", height=60, relief="raised", bd=1)
+        # Header với shadow effect
+        self.header_frame = tk.Frame(self.root, bg=self.card_color, height=60)
         self.header_frame.pack(fill=tk.X)
+        
+        # Tạo shadow effect cho header
+        self.header_shadow = tk.Frame(self.root, bg="#E0E0E0", height=2)
+        self.header_shadow.pack(fill=tk.X)
 
-        tk.Label(self.header_frame, text="Quản lý sinh viên", font=("Segoe UI", 18, "bold"), bg="white", fg="#6200EE").pack(padx=20, pady=10, anchor="w")
+        # Tiêu đề với font Material Design
+        title_label = tk.Label(
+            self.header_frame, 
+            text="Hệ thống Quản lý Sinh viên", 
+            font=("Segoe UI", 18, "bold"), 
+            bg=self.card_color, 
+            fg=self.primary_color
+        )
+        title_label.pack(padx=20, pady=10, anchor="w")
 
-        self.main_container = tk.Frame(self.root, bg="#f5f5f5")
-        self.main_container.pack(fill=tk.BOTH, expand=True)
-
-        self.menu_frame = tk.Frame(self.main_container, bg="white", width=120, relief="raised", bd=1)
-        self.menu_frame.pack(side=tk.LEFT, fill=tk.Y)
-        self.menu_frame.pack_propagate(False)
-
-        self.content_frame = tk.Frame(self.main_container, bg="#f5f5f5")
-        self.content_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+        # Container chính
+        self.main_container = tk.Frame(self.root, bg=self.background_color)
+        self.main_container.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+        
+        # Khung chứa nội dung
+        self.content_frame = tk.Frame(self.main_container, bg=self.card_color)
+        self.content_frame.pack(fill=tk.BOTH, expand=True)
 
     def create_menu(self):
-        menu_items = [
-            ("Đọc", self.show_read_students),
-            ("Quản lý sinh viên", self.show_manage_student),
-            ("Quay lại", self.back_to_main)  # Ensure this calls back_to_main
-        ]
-
-        for idx, (text, command) in enumerate(menu_items):
-            btn = tk.Button(
-                self.menu_frame, text=text, font=("Segoe UI", 10), bg="white", fg="#333333", bd=0,
-                activebackground="#E0E0E0", activeforeground="#6200EE",
-                command=command, padx=10, pady=10
-            )
-            btn.pack(fill=tk.X, pady=(10 if idx == 0 else 5, 0), padx=5)
-            self.add_hover_effect(btn)
+        # Khung chứa các nút chức năng
+        button_frame = tk.Frame(self.content_frame, bg=self.card_color)
+        button_frame.pack(pady=30)
+        
+        # Tạo các nút chức năng với hình ảnh
+        self.create_feature_button(button_frame, "Xem danh sách", "read_icon.png", self.show_read_students)
+        self.create_feature_button(button_frame, "Quản lý sinh viên", "manage_icon.png", self.show_manage_student)
+        self.create_feature_button(button_frame, "Quay lại", "back_icon.png", self.back_to_main)
+        
+    def create_feature_button(self, parent, text, icon_name, command):
+        # Tạo frame cho mỗi nút
+        btn_frame = tk.Frame(parent, bg=self.card_color, padx=15, pady=15)
+        btn_frame.pack(side=tk.LEFT, padx=10)
+        
+        # Thử tải ảnh icon
+        try:
+            icon_path = os.path.join("c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\images", icon_name)
+            if os.path.exists(icon_path):
+                icon_img = Image.open(icon_path)
+                icon_img = icon_img.resize((48, 48), Image.LANCZOS)
+                icon_photo = ImageTk.PhotoImage(icon_img)
+                
+                # Lưu tham chiếu để tránh bị thu hồi bởi garbage collector
+                setattr(self, f"{text}_icon", icon_photo)
+                
+                # Tạo label hiển thị icon
+                icon_label = tk.Label(btn_frame, image=icon_photo, bg=self.card_color)
+                icon_label.pack(pady=(0, 10))
+            else:
+                # Nếu không có icon, hiển thị emoji thay thế
+                emoji_map = {
+                    "Xem danh sách": "📖",
+                    "Quản lý sinh viên": "👨‍🎓",
+                    "Quay lại": "🔙"
+                }
+                emoji = emoji_map.get(text, "📋")
+                
+                emoji_label = tk.Label(btn_frame, text=emoji, font=("Segoe UI", 24), bg=self.card_color)
+                emoji_label.pack(pady=(0, 10))
+        except Exception as e:
+            print(f"Lỗi khi tải icon {icon_name}: {e}")
+            # Hiển thị emoji thay thế
+            emoji_map = {
+                "Xem danh sách": "📖",
+                "Quản lý sinh viên": "👨‍🎓",
+                "Quay lại": "🔙"
+            }
+            emoji = emoji_map.get(text, "📋")
+            
+            emoji_label = tk.Label(btn_frame, text=emoji, font=("Segoe UI", 24), bg=self.card_color)
+            emoji_label.pack(pady=(0, 10))
+        
+        # Tạo nút với Material Design
+        button = tk.Button(
+            btn_frame,
+            text=text,
+            font=("Segoe UI", 12, "bold"),
+            bg=self.primary_color,
+            fg="white",
+            padx=15,
+            pady=8,
+            bd=0,
+            relief="flat",
+            command=command
+        )
+        button.pack(fill=tk.X)
+        
+        # Thêm hiệu ứng hover
+        button.bind("<Enter>", lambda e: button.config(bg=self.primary_dark))
+        button.bind("<Leave>", lambda e: button.config(bg=self.primary_color))
 
     def back_to_main(self):
         self.root.destroy()  # Close the current window
@@ -67,12 +145,40 @@ class QuanLy:
 
     def create_dashboard(self):
         self.clear_content()
-        tk.Label(self.content_frame, text="Chào mừng đến với Hệ thống Quản lý Sinh viên!",
-                 font=("Segoe UI", 20, "bold"), bg="#f5f5f5", fg="#333333").pack(pady=50)
+        
+        # Tiêu đề chào mừng
+        welcome_label = tk.Label(
+            self.content_frame, 
+            text="Chào mừng đến với Hệ thống Quản lý Sinh viên", 
+            font=("Segoe UI", 20, "bold"), 
+            bg=self.card_color, 
+            fg=self.primary_color
+        )
+        welcome_label.pack(pady=20)
+        
+        # Mô tả ngắn
+        description_label = tk.Label(
+            self.content_frame, 
+            text="Hệ thống quản lý thông tin sinh viên hiện đại, dễ sử dụng và hiệu quả", 
+            font=("Segoe UI", 12), 
+            bg=self.card_color, 
+            fg=self.text_secondary,
+            wraplength=800
+        )
+        description_label.pack(pady=10)
+        
+        # Khung chứa các nút chức năng
+        button_frame = tk.Frame(self.content_frame, bg=self.card_color)
+        button_frame.pack(pady=30)
+        
+        # Tạo các nút chức năng với hình ảnh
+        self.create_feature_button(button_frame, "Xem danh sách", "read_icon.png", self.show_read_students)
+        self.create_feature_button(button_frame, "Quản lý sinh viên", "manage_icon.png", self.show_manage_student)
+        self.create_feature_button(button_frame, "Quay lại", "back_icon.png", self.back_to_main)
 
     def add_hover_effect(self, widget):
         widget.bind("<Enter>", lambda e: widget.config(bg="#E0E0E0"))
-        widget.bind("<Leave>", lambda e: widget.config(bg="white"))
+        widget.bind("<Leave>", lambda e: widget.config(bg=self.card_color))
 
     def clear_content(self):
         for widget in self.content_frame.winfo_children():
@@ -80,10 +186,10 @@ class QuanLy:
 
     def show_manage_student(self):
         self.clear_content()
-        tk.Label(self.content_frame, text="Quản lý sinh viên", font=("Segoe UI", 18, "bold"), bg="#f5f5f5", fg="#333333").pack(pady=20)
+        tk.Label(self.content_frame, text="Quản lý sinh viên", font=("Segoe UI", 18, "bold"), bg=self.background_color, fg=self.text_primary).pack(pady=20)
     
         # Create a frame for the form
-        form_frame = tk.Frame(self.content_frame, bg="#f5f5f5")
+        form_frame = tk.Frame(self.content_frame, bg=self.background_color)
         form_frame.pack(pady=10)
     
         # Define fields based on the new dataset columns
@@ -99,7 +205,7 @@ class QuanLy:
     
         # First row of fields
         for idx, field in enumerate(fields[:half]):
-            tk.Label(form_frame, text=field, font=("Segoe UI", 12), bg="#f5f5f5", fg="#333333").grid(row=idx, column=0, padx=10, pady=5, sticky="e")
+            tk.Label(form_frame, text=field, font=("Segoe UI", 12), bg=self.background_color, fg=self.text_primary).grid(row=idx, column=0, padx=10, pady=5, sticky="e")
             entry = tk.Entry(form_frame, font=("Segoe UI", 12), width=30)
             entry.grid(row=idx, column=1, padx=10, pady=5)
             entry.insert(0, last_student[field])  # Insert last student's data
@@ -107,31 +213,136 @@ class QuanLy:
     
         # Second row of fields
         for idx, field in enumerate(fields[half:]):
-            tk.Label(form_frame, text=field, font=("Segoe UI", 12), bg="#f5f5f5", fg="#333333").grid(row=idx, column=2, padx=10, pady=5, sticky="e")
+            tk.Label(form_frame, text=field, font=("Segoe UI", 12), bg=self.background_color, fg=self.text_primary).grid(row=idx, column=2, padx=10, pady=5, sticky="e")
             entry = tk.Entry(form_frame, font=("Segoe UI", 12), width=30)
             entry.grid(row=idx, column=3, padx=10, pady=5)
             entry.insert(0, last_student[field])  # Insert last student's data
             self.entries[field] = entry
     
         # Create a frame for buttons at the bottom
-        button_frame = tk.Frame(self.content_frame, bg="#f5f5f5")
+        button_frame = tk.Frame(self.content_frame, bg=self.background_color)
         button_frame.pack(pady=20)
     
-        # Add buttons in a horizontal row with equal sizes
+        # Add buttons in a horizontal row with equal sizes and icons
         buttons = [
-            ("Thêm", self.add_student),
-            ("Sửa", self.edit_student),
-            ("Xóa", self.delete_student),
-            ("Làm sạch", self.clear_form),
-            ("Tìm kiếm", self.search_student)  # Update to call search_student method
+            ("Thêm", self.add_student, "add_icon.png", "➕"),
+            ("Sửa", self.edit_student, "edit_icon.png", "✏️"),
+            ("Xóa", self.delete_student, "delete_icon.png", "🗑️"),
+            ("Làm sạch", self.clear_form, "clear_icon.png", "🧹"),
+            ("Tìm kiếm", self.search_student, "search_icon.png", "🔍")
         ]
     
-        for idx, (text, command) in enumerate(buttons):
-            btn = tk.Button(button_frame, text=text, font=("Segoe UI", 12), bg="white", fg="#333333", bd=0,
-                            activebackground="#E0E0E0", activeforeground="#6200EE",
-                            command=command, width=15, height=2)
-            btn.grid(row=0, column=idx, padx=5, pady=5)
-            self.add_hover_effect(btn)
+        for idx, (text, command, icon_name, emoji) in enumerate(buttons):
+            # Tạo frame cho mỗi nút
+            btn_frame = tk.Frame(button_frame, bg=self.card_color, padx=10, pady=10)
+            btn_frame.grid(row=0, column=idx, padx=5, pady=5)
+            
+            # Thử tải ảnh icon
+            try:
+                icon_path = os.path.join("c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\images", icon_name)
+                if os.path.exists(icon_path):
+                    icon_img = Image.open(icon_path)
+                    icon_img = icon_img.resize((32, 32), Image.LANCZOS)
+                    icon_photo = ImageTk.PhotoImage(icon_img)
+                    
+                    # Lưu tham chiếu để tránh bị thu hồi bởi garbage collector
+                    setattr(self, f"{text}_icon", icon_photo)
+                    
+                    # Tạo label hiển thị icon
+                    icon_label = tk.Label(btn_frame, image=icon_photo, bg=self.card_color)
+                    icon_label.pack(pady=(0, 5))
+                else:
+                    # Nếu không có icon, hiển thị emoji thay thế
+                    emoji_label = tk.Label(btn_frame, text=emoji, font=("Segoe UI", 18), bg=self.card_color)
+                    emoji_label.pack(pady=(0, 5))
+            except Exception as e:
+                print(f"Lỗi khi tải icon {icon_name}: {e}")
+                # Hiển thị emoji thay thế
+                emoji_label = tk.Label(btn_frame, text=emoji, font=("Segoe UI", 18), bg=self.card_color)
+                emoji_label.pack(pady=(0, 5))
+            
+            # Tạo nút với Material Design
+            btn = tk.Button(
+                btn_frame,
+                text=text,
+                font=("Segoe UI", 12, "bold"),
+                bg=self.primary_color,
+                fg="white",
+                padx=10,
+                pady=5,
+                bd=0,
+                relief="flat",
+                command=command,
+                width=10
+            )
+            btn.pack(fill=tk.X)
+            
+            # Thêm hiệu ứng hover
+            btn.bind("<Enter>", lambda e, b=btn: b.config(bg=self.primary_dark))
+            btn.bind("<Leave>", lambda e, b=btn: b.config(bg=self.primary_color))
+            
+            # Thêm hiệu ứng hover cho frame
+            self.add_hover_effect(btn_frame)
+            
+        # Thêm nút quay lại ở dưới cùng
+        back_frame = tk.Frame(self.content_frame, bg=self.background_color)
+        back_frame.pack(pady=20)
+        
+        # Thử tải ảnh icon cho nút quay lại
+        try:
+            icon_path = os.path.join("c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\images", "back_icon.png")
+            if os.path.exists(icon_path):
+                icon_img = Image.open(icon_path)
+                icon_img = icon_img.resize((24, 24), Image.LANCZOS)
+                self.back_icon = ImageTk.PhotoImage(icon_img)
+                
+                back_btn = tk.Button(
+                    back_frame,
+                    text="Quay lại",
+                    font=("Segoe UI", 12, "bold"),
+                    bg=self.primary_color,
+                    fg="white",
+                    padx=15,
+                    pady=8,
+                    bd=0,
+                    relief="flat",
+                    command=self.create_dashboard,
+                    image=self.back_icon,
+                    compound=tk.LEFT
+                )
+            else:
+                back_btn = tk.Button(
+                    back_frame,
+                    text="🔙 Quay lại",
+                    font=("Segoe UI", 12, "bold"),
+                    bg=self.primary_color,
+                    fg="white",
+                    padx=15,
+                    pady=8,
+                    bd=0,
+                    relief="flat",
+                    command=self.create_dashboard
+                )
+        except Exception as e:
+            print(f"Lỗi khi tải icon back_icon.png: {e}")
+            back_btn = tk.Button(
+                back_frame,
+                text="🔙 Quay lại",
+                font=("Segoe UI", 12, "bold"),
+                bg=self.primary_color,
+                fg="white",
+                padx=15,
+                pady=8,
+                bd=0,
+                relief="flat",
+                command=self.create_dashboard
+            )
+            
+        back_btn.pack()
+        
+        # Thêm hiệu ứng hover
+        back_btn.bind("<Enter>", lambda e: back_btn.config(bg=self.primary_dark))
+        back_btn.bind("<Leave>", lambda e: back_btn.config(bg=self.primary_color))
 
     def search_student(self):
         student_id = self.entries["StudentID"].get()
@@ -157,8 +368,12 @@ class QuanLy:
 
         tk.Label(self.content_frame, text="Danh sách sinh viên", font=("Segoe UI", 18, "bold"), bg="#f5f5f5", fg="#333333").pack(pady=20)
 
-        canvas = tk.Canvas(self.content_frame, bg="#f5f5f5")
-        scrollbar = tk.Scrollbar(self.content_frame, orient="vertical", command=canvas.yview)
+        scroll_frame = tk.Frame(self.content_frame, bg="#f5f5f5")
+        scroll_frame.pack(fill="both", expand=True)
+
+        canvas = tk.Canvas(scroll_frame, bg="#f5f5f5")
+        scrollbar = tk.Scrollbar(scroll_frame, orient="vertical", command=canvas.yview)
+
         scrollable_frame = tk.Frame(canvas, bg="#f5f5f5")
 
         scrollable_frame.bind(
@@ -169,7 +384,7 @@ class QuanLy:
         canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
         canvas.configure(yscrollcommand=scrollbar.set)
 
-        canvas.pack(side="top", fill="both", expand=True)
+        canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
         columns = df.columns.tolist()
@@ -205,6 +420,25 @@ class QuanLy:
         nav_frame.pack(side="bottom", pady=10, fill="x")
         tk.Button(nav_frame, text="Previous", command=prev_page).pack(side="left", padx=5)
         tk.Button(nav_frame, text="Next", command=next_page).pack(side="right", padx=5)
+        
+        # Thêm nút quay lại
+        back_btn = tk.Button(
+            nav_frame,
+            text="Quay lại",
+            font=("Segoe UI", 12, "bold"),
+            bg=self.primary_color,
+            fg="white",
+            padx=10,
+            pady=5,
+            bd=0,
+            relief="flat",
+            command=self.create_dashboard
+        )
+        back_btn.pack(side="bottom", pady=10)
+        
+        # Thêm hiệu ứng hover
+        back_btn.bind("<Enter>", lambda e: back_btn.config(bg=self.primary_dark))
+        back_btn.bind("<Leave>", lambda e: back_btn.config(bg=self.primary_color))
 
     def clear_form(self):
         # Clear all textboxes

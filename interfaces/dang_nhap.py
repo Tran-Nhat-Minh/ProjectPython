@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
+from PIL import Image, ImageTk
+import os
 
 class DangNhap:
     def __init__(self, root):
@@ -24,13 +26,36 @@ class DangNhap:
         self.header_frame = tk.Frame(self.root, bg="white", height=60, relief="raised", bd=1)
         self.header_frame.pack(fill=tk.X)
 
-        tk.Label(self.header_frame, text="Đăng Nhập Hệ Thống", font=("Segoe UI", 18, "bold"), bg="white", fg="#6200EE").pack(padx=20, pady=10, anchor="w")
+        tk.Label(self.header_frame, text="Đăng Nhập Hệ Thống", font=("Segoe UI", 18, "bold"), bg="white", fg="#6200EE").pack(side=tk.LEFT, padx=10, pady=10)
 
         self.main_container = tk.Frame(self.root, bg="#f5f5f5")
         self.main_container.pack(fill=tk.BOTH, expand=True)
 
+        # Form đăng nhập bên trái
         self.form_frame = tk.Frame(self.main_container, bg="white", width=400, relief="raised", bd=2)
         self.form_frame.pack(side=tk.LEFT, fill=tk.Y, padx=20, pady=20)
+
+        # Khung chứa ảnh bên phải
+        self.image_frame = tk.Frame(self.main_container, bg="#f5f5f5")
+        self.image_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=20, pady=20)
+        
+        # Thêm ảnh vào phần body
+        try:
+            img_path = "c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\img1.png"
+            if os.path.exists(img_path):
+                # Sử dụng PIL để xử lý ảnh
+                img = Image.open(img_path)
+                img = img.resize((800, 600), Image.LANCZOS)  # Điều chỉnh kích thước ảnh
+                self.body_img = ImageTk.PhotoImage(img)
+                
+                # Tạo label để hiển thị ảnh
+                img_label = tk.Label(self.image_frame, image=self.body_img, bg="#f5f5f5")
+                img_label.pack(expand=True)
+
+            else:
+                print(f"Không tìm thấy ảnh tại đường dẫn: {img_path}")
+        except Exception as e:
+            print(f"Lỗi khi tải ảnh: {e}")
 
         self.create_login_form()
 

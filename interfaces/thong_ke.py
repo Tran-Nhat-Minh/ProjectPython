@@ -14,7 +14,7 @@ class ThongKe:
         self.fade_in()
         
         # Load data
-        self.data_path = "D:\\HK2_2025\\Python\\ProjectPython-main\\students.csv"
+        self.data_path = "c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\students.csv"  # Đường dẫn tuyệt đối đến file
         try:
             self.df = pd.read_csv(self.data_path)
         except FileNotFoundError:
