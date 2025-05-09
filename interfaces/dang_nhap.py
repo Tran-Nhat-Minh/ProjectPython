@@ -41,7 +41,7 @@ class DangNhap:
         
         # Thêm ảnh vào phần body
         try:
-            img_path = "c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\img2.png"
+            img_path = os.path.join(os.path.dirname(__file__), "..", "img2.png")
             if os.path.exists(img_path):
                 # Sử dụng PIL để xử lý ảnh
                 img = Image.open(img_path)
@@ -94,7 +94,8 @@ class DangNhap:
     
         # Read credentials from the file
         try:
-            with open("c:\\Users\\LEGION\\PycharmProjects\\tuan10\\credentials.txt", "r") as file:
+            credentials_path = os.path.join(os.path.dirname(__file__), "..", "credentials.txt")
+            with open(credentials_path, "r") as file:
                 credentials = file.readlines()
         except FileNotFoundError:
             messagebox.showerror("Lỗi", "Không tìm thấy tệp thông tin đăng nhập!")

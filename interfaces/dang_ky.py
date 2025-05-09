@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
+import os
 
 class DangKy:
     def __init__(self, root):
@@ -39,7 +40,7 @@ class DangKy:
         
         # Tải và hiển thị hình ảnh
         try:
-            img_path = "c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\img1.png"
+            img_path = os.path.join(os.path.dirname(__file__), "..", "img1.png")
             img = Image.open(img_path)
             # Điều chỉnh kích thước hình ảnh để phù hợp với khung
             img = img.resize((750, 450), Image.LANCZOS)
@@ -108,7 +109,8 @@ class DangKy:
             return
 
         # Save credentials to a file
-        with open("c:\\Users\\LEGION\\PycharmProjects\\tuan10\\credentials.txt", "a") as file:
+        credentials_path = os.path.join(os.path.dirname(__file__), "..", "credentials.txt")
+        with open(credentials_path, "a") as file:
             file.write(f"{username},{password}\n")
 
         # Register logic (giả sử đăng ký thành công)
