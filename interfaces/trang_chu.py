@@ -169,9 +169,9 @@ class TrangChu:
         
     def open_student_management(self):
         self.root.destroy()
-        from interfaces.quan_ly import QuanLy
+        from interfaces.quan_ly_sinh_vien import QuanLySinhVien
         root = tk.Tk()
-        app = QuanLy(root)
+        app = QuanLySinhVien(root)
         root.mainloop()
         
     def open_statistics(self):
