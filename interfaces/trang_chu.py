@@ -1,18 +1,27 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, PhotoImage
+import os
+from PIL import Image, ImageTk
 
 class TrangChu:
     def __init__(self, root):
         self.root = root
-        self.root.title("Student Manager")
+        self.root.title("Quản lý sinh viên")
         self.root.geometry("1000x600")
         self.root.configure(bg="#f5f5f5")
+        
+        # Material Design Colors
+        self.primary_color = "#6200EE"
+        self.primary_dark = "#3700B3"
+        self.secondary_color = "#03DAC6"
+        self.background_color = "#f5f5f5"
+        self.card_color = "#ffffff"
+        self.text_primary = "#333333"
+        self.text_secondary = "#757575"
+        
         self.fade_in()
-
         self.create_layout()
-        self.create_menu()
-        self.create_dashboard()
-
+        
     def fade_in(self):
         self.root.attributes('-alpha', 0.0)
         alpha = 0.0
@@ -21,87 +30,160 @@ class TrangChu:
             self.root.attributes('-alpha', alpha)
             self.root.update()
             self.root.after(20)
-
+            
     def create_layout(self):
-        self.header_frame = tk.Frame(self.root, bg="white", height=60, relief="raised", bd=1)
+        # Header với shadow effect
+        self.header_frame = tk.Frame(self.root, bg=self.card_color, height=60)
         self.header_frame.pack(fill=tk.X)
+        
+        # Tạo shadow effect cho header
+        self.header_shadow = tk.Frame(self.root, bg="#E0E0E0", height=2)
+        self.header_shadow.pack(fill=tk.X)
 
-        tk.Label(self.header_frame, text="Student Manager", font=("Segoe UI", 18, "bold"), bg="white", fg="#6200EE").pack(padx=20, pady=10, anchor="w")
+        # Tiêu đề với font Material Design
+        title_label = tk.Label(
+            self.header_frame, 
+            text="Hệ thống Quản lý Sinh viên", 
+            font=("Segoe UI", 18, "bold"), 
+            bg=self.card_color, 
+            fg=self.primary_color
+        )
+        title_label.pack(padx=20, pady=10, anchor="w")
 
-        self.main_container = tk.Frame(self.root, bg="#f5f5f5")
-        self.main_container.pack(fill=tk.BOTH, expand=True)
+        # Container chính
+        self.main_container = tk.Frame(self.root, bg=self.background_color)
+        self.main_container.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+        
+        # Khung chứa ảnh và nội dung
+        self.content_frame = tk.Frame(self.main_container, bg=self.card_color)
+        self.content_frame.pack(fill=tk.BOTH, expand=True)
+        
+        # Thêm ảnh banner
+        try:
+            # Đường dẫn đến ảnh banner
+            banner_path = os.path.join("c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\images", "banner.png")
+            
+            # Kiểm tra xem file có tồn tại không
+            if os.path.exists(banner_path):
+                # Sử dụng PIL để xử lý ảnh
+                banner_img = Image.open(banner_path)
+                banner_img = banner_img.resize((960, 200), Image.LANCZOS)  # Điều chỉnh kích thước ảnh
+                
+                # Chuyển đổi sang định dạng PhotoImage của Tkinter
+                self.banner_photo = ImageTk.PhotoImage(banner_img)
 
-        self.menu_frame = tk.Frame(self.main_container, bg="white", width=120, relief="raised", bd=1)
-        self.menu_frame.pack(side=tk.LEFT, fill=tk.Y)
-        self.menu_frame.pack_propagate(False)
+        except Exception as e:
+            print(f"Lỗi khi tải ảnh: {e}")
+        
+        # Tiêu đề chào mừng
+        welcome_label = tk.Label(
+            self.content_frame, 
+            text="Chào mừng đến với Hệ thống Quản lý Sinh viên", 
+            font=("Segoe UI", 20, "bold"), 
+            bg=self.card_color, 
+            fg=self.primary_color
+        )
+        welcome_label.pack(pady=20)
+        
+        # Mô tả ngắn
+        description_label = tk.Label(
+            self.content_frame, 
+            text="Hệ thống quản lý thông tin sinh viên hiện đại, dễ sử dụng và hiệu quả", 
+            font=("Segoe UI", 12), 
+            bg=self.card_color, 
+            fg=self.text_secondary,
+            wraplength=800
+        )
+        description_label.pack(pady=10)
+        
+        # Khung chứa các nút chức năng
+        button_frame = tk.Frame(self.content_frame, bg=self.card_color)
+        button_frame.pack(pady=30)
+        
+        # Tạo các nút chức năng với hình ảnh
+        self.create_feature_button(button_frame, "Quản lý sinh viên", "student_icon.png", self.open_student_management)
+        self.create_feature_button(button_frame, "Thống kê dữ liệu", "stats_icon.png", self.open_statistics)
+        self.create_feature_button(button_frame, "Thoát", "exit_icon.png", self.exit_app)
+        
+    def create_feature_button(self, parent, text, icon_name, command):
+        # Tạo frame cho mỗi nút
+        btn_frame = tk.Frame(parent, bg=self.card_color, padx=15, pady=15)
+        btn_frame.pack(side=tk.LEFT, padx=10)
+        
+        # Thử tải ảnh icon
+        try:
+            icon_path = os.path.join("c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\images", icon_name)
+            if os.path.exists(icon_path):
+                icon_img = Image.open(icon_path)
+                icon_img = icon_img.resize((48, 48), Image.LANCZOS)
+                icon_photo = ImageTk.PhotoImage(icon_img)
+                
+                # Lưu tham chiếu để tránh bị thu hồi bởi garbage collector
+                setattr(self, f"{text}_icon", icon_photo)
+                
+                # Tạo label hiển thị icon
+                icon_label = tk.Label(btn_frame, image=icon_photo, bg=self.card_color)
+                icon_label.pack(pady=(0, 10))
+            else:
+                # Nếu không có icon, hiển thị emoji thay thế
+                emoji_map = {
+                    "Quản lý sinh viên": "👨‍🎓",
+                    "Thống kê dữ liệu": "📊",
+                    "Thoát": "🚪"
+                }
+                emoji = emoji_map.get(text, "📋")
+                
+                emoji_label = tk.Label(btn_frame, text=emoji, font=("Segoe UI", 24), bg=self.card_color)
+                emoji_label.pack(pady=(0, 10))
+        except Exception as e:
+            print(f"Lỗi khi tải icon {icon_name}: {e}")
+            # Hiển thị emoji thay thế
+            emoji_map = {
+                "Quản lý sinh viên": "👨‍🎓",
+                "Thống kê dữ liệu": "📊",
+                "Thoát": "🚪"
+            }
+            emoji = emoji_map.get(text, "📋")
+            
+            emoji_label = tk.Label(btn_frame, text=emoji, font=("Segoe UI", 24), bg=self.card_color)
+            emoji_label.pack(pady=(0, 10))
+        
+        # Tạo nút với Material Design
+        button = tk.Button(
+            btn_frame,
+            text=text,
+            font=("Segoe UI", 12, "bold"),
+            bg=self.primary_color,
+            fg="white",
+            padx=15,
+            pady=8,
+            bd=0,
+            relief="flat",
+            command=command
+        )
+        button.pack(fill=tk.X)
+        
+        # Thêm hiệu ứng hover
+        button.bind("<Enter>", lambda e: button.config(bg=self.primary_dark))
+        button.bind("<Leave>", lambda e: button.config(bg=self.primary_color))
+        
+    def open_student_management(self):
+        self.root.destroy()
+        from interfaces.quan_ly import QuanLy
+        root = tk.Tk()
+        app = QuanLy(root)
+        root.mainloop()
+        
+    def open_statistics(self):
+        self.root.destroy()
+        from interfaces.thong_ke import ThongKe
+        root = tk.Tk()
+        app = ThongKe(root)
+        root.mainloop()
 
-        self.content_frame = tk.Frame(self.main_container, bg="#f5f5f5")
-        self.content_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
-
-    def create_menu(self):
-        menu_items = [
-            ("Quản lý", self.show_management),
-            # ("Trực quan", self.show_visualization),
-            ("Thống kê", self.show_statistics),
-            ("Đăng xuất", self.logout),
-            ("Thoát", self.exit_app)
-        ]
-
-        for idx, (text, command) in enumerate(menu_items):
-            btn = tk.Button(self.menu_frame, text=text, font=("Segoe UI", 10), bg="white", fg="#333333", bd=0,
-                            activebackground="#E0E0E0", activeforeground="#6200EE",
-                            command=command, padx=10, pady=10)
-            btn.pack(fill=tk.X, pady=(10 if idx == 0 else 5, 0), padx=5)
-            self.add_hover_effect(btn)
-
-    def add_hover_effect(self, widget):
-        widget.bind("<Enter>", lambda e: widget.config(bg="#E0E0E0"))
-        widget.bind("<Leave>", lambda e: widget.config(bg="white"))
-
-    def create_dashboard(self):
-        self.clear_content()
-        tk.Label(self.content_frame, text="Chào mừng đến với Hệ thống Quản lý Sinh viên!",
-                 font=("Segoe UI", 20, "bold"), bg="#f5f5f5", fg="#333333").pack(pady=50)
-
-    def clear_content(self):
-        for widget in self.content_frame.winfo_children():
-            widget.destroy()
-
-    def show_management(self):
-        if messagebox.askyesno("Xác nhận", "Chuyển đến trang quản lý sinh viên?"):
-            self.root.destroy()
-            from interfaces.quan_ly import QuanLy  # Update the import path
-            root = tk.Tk()
-            app = QuanLy(root)
-            root.mainloop()
-
-    # def show_visualization(self):
-    #     if messagebox.askyesno("Xác nhận", "Chuyển đến trang trực quan hóa dữ liệu?"):
-    #         self.root.destroy()
-    #         from truc_quan import TrucQuan
-    #         root = tk.Tk()
-    #         app = TrucQuan(root)
-    #         root.mainloop()
-
-    def show_statistics(self):
-        if messagebox.askyesno("Xác nhận", "Chuyển đến trang thống kê dữ liệu?"):
-            self.root.destroy()
-            from thong_ke import ThongKe  # Import from the correct location
-            root = tk.Tk()
-            app = ThongKe(root)
-            root.mainloop()
-
-    def logout(self):
-        if messagebox.askyesno("Xác nhận", "Bạn có muốn đăng xuất?"):
-            self.root.destroy()
-            from dang_nhap import DangNhap
-            root = tk.Tk()
-            app = DangNhap(root)
-            root.mainloop()
-
+        
     def exit_app(self):
-        if messagebox.askyesno("Xác nhận", "Bạn có muốn thoát ứng dụng?"):
-            self.root.destroy()
+        self.root.destroy()
 
 if __name__ == "__main__":
     root = tk.Tk()
