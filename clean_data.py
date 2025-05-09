@@ -38,4 +38,4 @@ def clean_student_data(input_file: str, output_file: str) -> None:
     else:
         print(f"File {output_file} đã tồn tại.")
 
-clean_student_data("D:/processingData/students.csv", "students_cleaned.csv")
+clean_student_data("students.csv", "students_cleaned.csv")
