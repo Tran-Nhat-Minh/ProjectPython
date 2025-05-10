@@ -14,6 +14,10 @@ def clean_student_data(input_file: str, output_file: str) -> None:
     # Đọc dữ liệu từ file CSV
     df = pd.read_csv(input_file)
 
+    print(df.dtypes)
+
+    print(df.shape)
+
     # Làm sạch tên cột (xóa khoảng trắng thừa)
     df.columns = df.columns.str.strip()
 
@@ -37,5 +41,5 @@ def clean_student_data(input_file: str, output_file: str) -> None:
         print(f"File {output_file} đã được tạo thành công.")
     else:
         print(f"File {output_file} đã tồn tại.")
-
+    print(df.shape)
 clean_student_data("students.csv", "students_cleaned.csv")

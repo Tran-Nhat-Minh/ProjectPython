@@ -1,6 +1,6 @@
 import pandas as pd
 
-def read_students(file_path=".\\Churn_Modelling.csv"):  # Default to Churn_Modelling.csv
+def read_students(file_path="..\\Churn_Modelling.csv"):  # Default to Churn_Modelling.csv
     try:
         df = pd.read_csv(file_path)
         return df
@@ -8,7 +8,7 @@ def read_students(file_path=".\\Churn_Modelling.csv"):  # Default to Churn_Model
         print("Không tìm thấy dữ liệu sinh viên!")
         return None
 
-def add_student(student_data, file_path=".\\Churn_Modelling.csv"):
+def add_student(student_data, file_path="..\\Churn_Modelling.csv"):
     try:
         df = pd.read_csv(file_path)
         df = df.append(student_data, ignore_index=True)
@@ -17,7 +17,7 @@ def add_student(student_data, file_path=".\\Churn_Modelling.csv"):
     except Exception as e:
         print(f"Lỗi khi thêm sinh viên: {e}")
 
-def edit_student(student_id, updated_data, file_path=".\\Churn_Modelling.csv"):
+def edit_student(student_id, updated_data, file_path="..\\Churn_Modelling.csv"):
     try:
         df = pd.read_csv(file_path)
         if student_id in df['CustomerId'].values:
@@ -29,7 +29,7 @@ def edit_student(student_id, updated_data, file_path=".\\Churn_Modelling.csv"):
     except Exception as e:
         print(f"Lỗi khi sửa sinh viên: {e}")
 
-def delete_student(student_id, file_path=".\\Churn_Modelling.csv"):
+def delete_student(student_id, file_path="..\\Churn_Modelling.csv"):
     try:
         df = pd.read_csv(file_path)
         if student_id in df['CustomerId'].values:

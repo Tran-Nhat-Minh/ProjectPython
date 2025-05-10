@@ -39,7 +39,7 @@ class DangKy:
         
         # Tải và hiển thị hình ảnh
         try:
-            img_path = "c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\img1.png"
+            img_path = ".\\img1.png"
             img = Image.open(img_path)
             # Điều chỉnh kích thước hình ảnh để phù hợp với khung
             img = img.resize((750, 450), Image.LANCZOS)

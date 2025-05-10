@@ -61,7 +61,7 @@ class TrangChu:
         # Thêm ảnh banner
         try:
             # Đường dẫn đến ảnh banner
-            banner_path = os.path.join("c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\images", "banner.png")
+            banner_path = os.path.join(".\\images", "banner.png")
             
             # Kiểm tra xem file có tồn tại không
             if os.path.exists(banner_path):
@@ -112,7 +112,7 @@ class TrangChu:
         
         # Thử tải ảnh icon
         try:
-            icon_path = os.path.join("c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\images", icon_name)
+            icon_path = os.path.join(".\\images", icon_name)
             if os.path.exists(icon_path):
                 icon_img = Image.open(icon_path)
                 icon_img = icon_img.resize((48, 48), Image.LANCZOS)

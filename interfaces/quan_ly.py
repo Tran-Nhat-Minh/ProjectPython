@@ -81,7 +81,7 @@ class QuanLy:
         
         # Thử tải ảnh icon
         try:
-            icon_path = os.path.join("c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\images", icon_name)
+            icon_path = os.path.join("..\\images", icon_name)
             if os.path.exists(icon_path):
                 icon_img = Image.open(icon_path)
                 icon_img = icon_img.resize((48, 48), Image.LANCZOS)
@@ -239,7 +239,7 @@ class QuanLy:
             
             # Thử tải ảnh icon
             try:
-                icon_path = os.path.join("c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\images", icon_name)
+                icon_path = os.path.join(".\\images", icon_name)
                 if os.path.exists(icon_path):
                     icon_img = Image.open(icon_path)
                     icon_img = icon_img.resize((32, 32), Image.LANCZOS)
@@ -290,7 +290,7 @@ class QuanLy:
         
         # Thử tải ảnh icon cho nút quay lại
         try:
-            icon_path = os.path.join("c:\\Users\\LEGION\\PycharmProjects\\projectcuoiky\\images", "back_icon.png")
+            icon_path = os.path.join(".\\images", "back_icon.png")
             if os.path.exists(icon_path):
                 icon_img = Image.open(icon_path)
                 icon_img = icon_img.resize((24, 24), Image.LANCZOS)
